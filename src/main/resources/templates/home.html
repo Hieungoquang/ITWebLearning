@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Chủ - E-Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"> <!-- CSS custom của bạn -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Icon optional -->
+</head>
+<body>
+<!-- Navbar chung -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">E-Learning Platform</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Trang Chủ</a></li>
+                <li class="nav-item"><a class="nav-link" href="/courses">Khóa Học</a></li>
+                <li class="nav-item"><a class="nav-link" href="/progress">Tiến Độ</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">Đăng Xuất</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar: Thông tin học viên -->
+        <div class="col-md-3 sidebar p-4">
+            <div class="text-center mb-4">
+                <img src="https://via.placeholder.com/150" alt="Avatar" class="rounded-circle mb-3" width="150"> <!-- Thay bằng th:src nếu có avatar -->
+                <h4 th:text="${user.fullName}">Tên Học Viên</h4>
+                <p th:text="${user.email}">email@example.com</p>
+                <span class="badge bg-primary">Học Viên</span>
+            </div>
+            <hr class="bg-light">
+            <h5>Thống kê nhanh</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Khóa học đang học</span>
+                    <strong th:text="${enrolledCount}">5</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Khóa học hoàn thành</span>
+                    <strong th:text="${completedCount}">3</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Tổng giờ học</span>
+                    <strong>120 giờ</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Streak hiện tại</span>
+                    <strong>7 ngày 🔥</strong>
+                </li>
+            </ul>
+            <a href="/profile" class="btn btn-outline-light mt-4 w-100">Chỉnh Sửa Hồ Sơ</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 p-5">
+            <h2 class="mb-4">Chào mừng quay lại, <span th:text="${user.fullName}">Hiệu</span>! 👋</h2>
+
+            <!-- Phần 1: Theo dõi tiến độ học tập tổng quát -->
+            <div class="row mb-5">
+                <div class="col-md-8">
+                    <div class="card p-4">
+                        <h4 class="card-title">Tiến Độ Học Tập Tổng Quát</h4>
+                        <div class="progress mb-3" style="height: 40px;">
+                            <div class="progress-bar" th:style="'width: ' + ${overallProgress} + '%'" th:text="${overallProgress} + '%'">75%</div>
+                        </div>
+                        <p>Bạn đã hoàn thành <strong th:text="${overallProgress}">75%</strong> mục tiêu học tập!</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center p-4">
+                        <h5>Học tập hôm nay</h5>
+                        <h2 class="text-primary">2 giờ</h2>
+                        <small>So với hôm qua +30 phút</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 2: Các khóa học đã tham gia -->
+            <h4 class="mb-4">Khóa Học Đã Tham Gia</h4>
+            <div class="row">
+                <div th:each="course : ${enrolledCourses}" class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Course Image"> <!-- Thay bằng ảnh khóa học -->
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${course.title}">Java Spring Boot Nâng Cao</h5>
+                            <p class="text-muted">Giảng viên: <span th:text="${course.instructor}">Mr. ABC</span></p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" th:style="'width: ' + ${course.progress} + '%'" th:text="${course.progress} + '%'"></div>
+                            </div>
+                            <a th:href="@{/course/{id}(id=${course.id})}" class="btn btn-primary">Tiếp Tục Học</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(enrolledCourses)}" class="text-center py-5">
+                <p>Bạn chưa tham gia khóa học nào. <a href="/courses">Khám phá ngay!</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

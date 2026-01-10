@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng Nhập</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css">
+</head>
+<body class="auth-page">
+<div class="container">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-4">
+            <div class="auth-card">
+                <h2 class="text-center mb-4">Đăng Nhập</h2>
+                <form th:action="@{/login}" method="post">
+                    <div class="mb-3">
+                        <input type="text" name="username" class="form-control" placeholder="Email hoặc Số điện thoại" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Đăng Nhập</button>
+                </form>
+                <p class="text-center mt-3"><a href="/forgot-password">Quên mật khẩu?</a> </p>
+                <p class="text-center mt-3"><a href="/register">Đăng ký tài khoản</a> </p>
+                <div th:if="${param.error}" class="alert alert-danger mt-3">Sai thông tin!</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container, .container-fluid {
+    padding: 20px;
+}
+
+/* Header & Navbar */
+.navbar {
+    background: #4e73df !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-brand, .nav-link {
+    color: white !important;
+    font-weight: 600;
+}
+
+.nav-link:hover {
+    color: #ffd700 !important;
+}
+
+/* Cards khóa học / dashboard */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-weight: 600;
+    color: #4e73df;
+}
+
+/* Progress Bar đẹp */
+.progress {
+    height: 25px;
+    border-radius: 20px;
+    background: #e9ecef;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(to right, #28a745, #20c997);
+    transition: width 1.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+/* Button chính */
+.btn-primary {
+    background: #4e73df;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 30px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background: #2e59d9;
+    transform: scale(1.05);
+}
+
+.btn-success {
+    background: #28a745;
+    border-radius: 30px;
+}
+
+/* Login / Forgot Password - Form giữa màn hình, gradient background */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.auth-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+}
+
+.auth-card h2 {
+    color: #4e73df;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Accordion cho modules khóa học */
+.accordion-button {
+    background: #4e73df;
+    color: white;
+    font-weight: 600;
+}
+
+.accordion-button:not(.collapsed) {
+    background: #2e59d9;
+}
+
+/* Quiz page */
+.quiz-question {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.form-check-label {
+    font-size: 1.1rem;
+}
+
+/* Sidebar dashboard */
+.sidebar {
+    background: #343a40;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.sidebar a {
+    color: #cfd8dc;
+    display: block;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+
+.sidebar a:hover {
+    background: #4e73df;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+    .col-md-3, .col-md-9 {
+        width: 100%;
+    }
+}

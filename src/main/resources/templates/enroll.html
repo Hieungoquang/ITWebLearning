@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <title>Xác nhận tham gia</title>
+</head>
+<body>
+<div class="container">
+    <h2>Tham Gia Khóa Học: <span th:text="${course.title}"></span></h2>
+    <form th:action="@{/enroll/{id}(id=${course.id})}" method="post">
+        <!-- Additional fields if needed -->
+        <button type="submit" class="btn btn-primary">Xác Nhận</button>
+    </form>
+</div>
+</body>
+</html>
