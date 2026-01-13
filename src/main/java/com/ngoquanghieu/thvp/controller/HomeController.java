@@ -17,7 +17,7 @@ public class HomeController {
     @GetMapping({"/","/home"})
     public String home(Model model, Authentication auth) {
         var user = userService.getCurrentUser(auth);
-        var enrollments = enrollmentService.getEnrollmentsByUser(user);
+        var enrollments = enrollmentService.getEnrollmentsByUser(user.getId());
         model.addAttribute("user", user);
         model.addAttribute("enrolledCourses", enrollments);
         model.addAttribute("overallProgress", enrollmentService.calculateOverallProgress(user));

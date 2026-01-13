@@ -40,7 +40,6 @@ public class AuthController {
         if (result.hasErrors()) {
             return "register";
         }
-        user.setPhoneNumber(phoneNumber);
 
         if (!user.getPassword().equals(confirmPassword)) {
             ra.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");

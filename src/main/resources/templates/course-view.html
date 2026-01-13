@@ -1,31 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Khóa Học - E-Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/custom.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f8f9fa; min-height: 100vh; }
+        .navbar { background: #4e73df; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+        /* Sidebar nhỏ hơn: 200px */
+        .sidebar {
+            background: #343a40;
+            min-height: calc(100vh - 56px);
+            color: white;
+            width: 200px;
+            position: fixed;
+            top: 56px;
+            left: 0;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .sidebar.hidden { transform: translateX(-200px); }
+        .sidebar a {
+            color: #adb5bd;
+            display: block;
+            padding: 12px 16px;  /* Giảm padding ngang cho gọn */
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: #4e73df;
+            color: white;
+        }
+
+        /* Content điều chỉnh theo sidebar mới */
+        .content {
+            margin-left: 200px;
+            transition: margin-left 0.3s ease;
+            padding: 20px;
+        }
+        .content.full { margin-left: 0; }
+
+        .toggle-btn { cursor: pointer; font-size: 24px; color: white; }
+        .course-card { border: none; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .course-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .card-img-top { height: 200px; object-fit: cover; }
+        .card-body { padding: 20px; }
+        .btn-primary { background: #4e73df; border: none; border-radius: 30px; }
+        .btn-primary:hover { background: #2e59d9; }
+        .progress { height: 8px; border-radius: 10px; }
+        .progress-bar { background: linear-gradient(to right, #28a745, #20c997); }
+        .avatar-sm { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-200px); }
+            .sidebar.active { transform: translateX(0); }
+            .content { margin-left: 0; }
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-<h1 th:text="${course.title}"></h1>
-<p th:text="${course.description}"></p>
-<div class="accordion" id="modules">
-    <div th:each="module, iter : ${course.modules}" class="accordion-item">
-        <h2 class="accordion-header" th:id="'heading' + ${iter.index}">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" th:attr="data-bs-target='#collapse' + ${iter.index}">
-                th:text="${module.title}"
-            </button>
-        </h2>
-        <div th:id="'collapse' + ${iter.index}" class="accordion-collapse collapse">
-            <div class="accordion-body">
-                <!-- Video iframe or content -->
+<!-- Navbar (nhất quán với trang chủ) -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center">
+            <span class="toggle-btn material-icons me-3 fs-3" id="toggleSidebar">menu</span>
+            <a class="navbar-brand fw-bold fs-4" href="/home">E-Learning</a>
+        </div>
+
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <img th:src="${user.avatarUrl} ?: '/images/avatars/default.jpg'"
+                     class="avatar-sm rounded-circle shadow-sm" alt="Avatar">
+                <span class="text-white fw-medium d-none d-md-block" th:text="${user.fullName}"></span>
             </div>
+            <a href="/logout" class="btn btn-outline-light btn-sm px-3 py-2 fw-medium rounded-pill">
+                <span class="material-icons align-middle me-1">logout</span> Đăng xuất
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="text-center mb-4 pt-3">
+        <img th:src="${user.avatarUrl} ?: '/images/avatars/default.jpg'" class="avatar-sm mb-2" alt="Avatar">
+        <h5 th:text="${user.fullName}"></h5>
+        <small th:text="${user.role}"></small>
+    </div>
+    <hr class="bg-light mx-3">
+    <a href="/home"><span class="material-icons me-2">home</span> Trang Chủ</a>
+    <a href="/course-view" class="active"><span class="material-icons me-2">school</span> Khóa Học</a>
+    <a href="/progress"><span class="material-icons me-2">trending_up</span> Tiến Độ</a>
+    <a href="/edit-profile"><span class="material-icons me-2">person</span> Hồ Sơ</a>
+    <a href="/logout"><span class="material-icons me-2">logout</span> Đăng Xuất</a>
+</div>
+
+<!-- Nội dung chính: Danh sách khóa học -->
+<div class="content" id="content">
+    <div class="container-fluid pt-5 mt-4">
+        <h3 class="mb-4">Danh Sách Khóa Học</h3>
+        <p class="text-muted mb-5">Khám phá các khóa học chất lượng cao từ giảng viên hàng đầu</p>
+
+        <div class="row">
+            <div th:each="course : ${courses}" class="col-md-6 col-lg-4 mb-4">
+                <div class="course-card h-100">
+                    <img th:src="${course.thumbnailUrl} ?: '/images/default-course.jpg'" class="card-img-top" alt="Thumbnail">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${course.title}">Tiêu đề khóa học</h5>
+                        <p class="text-muted small mb-2" th:text="'Giảng viên: ' + ${course.instructor.fullName}"></p>
+                        <p class="card-text text-truncate-2" th:text="${course.description}">Mô tả ngắn...</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="badge bg-primary" th:text="${course.modules != null ? course.modules.size() : 0} + ' chương'"></span>
+                            <span class="text-muted small" th:if="${course.status == 'PUBLISHED'}">Đang mở</span>
+                            <span class="text-danger small" th:if="${course.status == 'PENDING'}">Chờ duyệt</span>
+                        </div>
+                        <a th:href="@{/course/{id}(id=${course.id})}" class="btn btn-primary mt-3 w-100">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nếu chưa có khóa học -->
+        <div th:if="${#lists.isEmpty(courses)}" class="text-center py-5">
+            <h5 class="text-muted">Hiện tại chưa có khóa học nào. Hãy quay lại sau!</h5>
         </div>
     </div>
 </div>
-<a th:href="@{/enroll/{id}(id=${course.id})}" class="btn btn-success">Tham Gia</a>
-</div>
 
+<!-- JavaScript toggle sidebar -->
+<script>
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('hidden');
+        content.classList.toggle('full');
+    });
+</script>
 </body>
 </html>

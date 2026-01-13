@@ -1,32 +1,96 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng Nhập</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/custom.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - E-Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+        }
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+        }
+        .form-control:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 0.25rem rgba(78,115,223,.25);
+        }
+        .btn-primary {
+            background: #4e73df;
+            border: none;
+            border-radius: 50px;
+            padding: 12px;
+            font-weight: 600;
+        }
+        .error-alert {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+        .close-btn {
+            cursor: pointer;
+            float: right;
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
-<body class="auth-page">
-<div class="container">
-    <div class="row justify-content-center align-items-center min-vh-100">
-        <div class="col-md-4">
-            <div class="auth-card">
-                <h2 class="text-center mb-4">Đăng Nhập</h2>
-                <form th:action="@{/login}" method="post">
-                    <div class="mb-3">
-                        <input type="text" name="username" class="form-control" placeholder="Email hoặc Số điện thoại" required>
-                    </div>
-                    <div class="mb-3">
-                        <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Đăng Nhập</button>
-                </form>
-                <p class="text-center mt-3"><a href="/forgot-password">Quên mật khẩu?</a> </p>
-                <p class="text-center mt-3"><a href="/register">Đăng ký tài khoản</a> </p>
-                <div th:if="${param.error}" class="alert alert-danger mt-3">Sai thông tin!</div>
-            </div>
+<body>
+<div class="login-card">
+    <h2 class="text-center mb-4 fw-bold text-primary">Đăng Nhập</h2>
+
+    <!-- Hiển thị lỗi nếu có -->
+    <div th:if="${param.error}" class="error-alert">
+        <strong>Sai email/số điện thoại hoặc mật khẩu!</strong>
+        <span class="close-btn" onclick="this.parentElement.style.display='none'">×</span>
+    </div>
+
+    <!-- Hiển thị nếu vừa logout thành công (tùy chọn) -->
+    <div th:if="${param.logout}" class="alert alert-success">
+        Bạn đã đăng xuất thành công!
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label fw-medium">Email hoặc Số điện thoại</label>
+            <input type="text" class="form-control" id="username" name="username"
+                   placeholder="Nhập email hoặc số điện thoại" required autofocus>
         </div>
+
+        <div class="mb-4">
+            <label for="password" class="form-label fw-medium">Mật khẩu</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   placeholder="Nhập mật khẩu" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Đăng Nhập</button>
+    </form>
+
+    <div class="text-center mt-4">
+        <p>Chưa có tài khoản? <a href="/register" class="text-primary fw-medium">Đăng ký ngay</a></p>
+        <a href="/forgot-password" class="text-muted small">Quên mật khẩu?</a>
     </div>
 </div>
+
+<script>
+    // Tự động ẩn alert sau 5 giây (tùy chọn)
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.error-alert, .alert-success');
+        alerts.forEach(alert => alert.style.display = 'none');
+    }, 5000);
+</script>
 </body>
 </html>

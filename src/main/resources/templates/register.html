@@ -19,7 +19,7 @@
         .auth-card {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             padding: 40px 35px;
             max-width: 450px;
             width: 100%;
@@ -43,7 +43,7 @@
         }
         .form-control:focus {
             border-color: #4e73df;
-            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+            box-shadow: 0 0 0 0.25rem rgba(78,115,223,0.25);
         }
         .btn-primary {
             background: #4e73df;
@@ -68,6 +68,10 @@
         .alert {
             border-radius: 10px;
         }
+        .small-text {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -77,9 +81,16 @@
             <div class="auth-card text-center">
                 <h2 class="mb-4">Đăng Ký Tài Khoản</h2>
 
-                <!-- Thông báo -->
-                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-                <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+                <!-- Flash message từ redirect -->
+                <div th:if="${param.success or session.flashSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${param.success} ?: ${session.flashSuccess}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div th:if="${param.error or error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${param.error} ?: ${error} ?: 'Có lỗi xảy ra!'"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
 
                 <form th:action="@{/register}" th:object="${user}" method="post">
                     <!-- Họ và tên -->
@@ -87,11 +98,14 @@
                         <label class="form-label">Họ và tên</label>
                         <input type="text" class="form-control" th:field="*{fullName}" required placeholder="Nhập họ và tên đầy đủ">
                     </div>
+
                     <!-- Số điện thoại -->
                     <div class="mb-4 text-start">
                         <label class="form-label">Số điện thoại</label>
-                        <input type="email" class="form-control" th:field="*{email}" required placeholder="Ví dụ: 0123456789">
+                        <input type="tel" class="form-control" th:field="*{phoneNumber}" pattern="[0-9]{10}" required placeholder="Nhập 10 số (ví dụ: 0123456789)">
+                        <small class="small-text">Sử dụng để đăng nhập thay thế email</small>
                     </div>
+
                     <!-- Email -->
                     <div class="mb-4 text-start">
                         <label class="form-label">Email</label>
@@ -121,5 +135,16 @@
         </div>
     </div>
 </div>
+
+<!-- Tự động ẩn alert sau 5 giây -->
+<script>
+    document.querySelectorAll('.alert').forEach(alert => {
+        setTimeout(() => {
+            alert.classList.remove('show');
+            alert.classList.add('fade');
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
+</script>
 </body>
 </html>

@@ -1,18 +1,20 @@
 package com.ngoquanghieu.thvp.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import java.io.Serializable;
 
 @Entity
 @Table(name = "enrollments")
-@Data
-@IdClass(EnrollmentId.class) // Composite key
+@IdClass(EnrollmentId.class)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Enrollment {
+
     @Id
     @Column(name = "user_id")
     private Long userId;
@@ -21,26 +23,23 @@ public class Enrollment {
     @Column(name = "course_id")
     private Long courseId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", insertable = false, updatable = false)
     private Course course;
 
-    @Column(name = "enrolled_date")
-    private LocalDateTime enrolledDate = LocalDateTime.now();
+    @Column(name = "enrolled_at")
+    private LocalDateTime enrolledAt = LocalDateTime.now();
 
     @Column(name = "progress_percentage")
     private int progressPercentage = 0;
 
+    @Column(nullable = false)
     private boolean completed = false;
 
-    @Column(name = "last_accessed_lesson_id")
-    private Long lastAccessedLessonId;
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
 }
-
-
-
-
